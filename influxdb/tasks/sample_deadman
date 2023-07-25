@@ -1,0 +1,23 @@
+data =
+    from(bucket: "metrics")
+        |> range(start: -15m)
+        |> filter(fn: (r) => r["_measurement"] == "cpu")
+        |> filter(fn: (r) => r["_field"] == "usage_system")
+        |> filter(fn: (r) => r["cpu"] == "cpu-total")
+        |> filter(fn: (r) => r["host"] == "influxdb")
+
+task = {name: "CPU Check Influx", every: 5m, offset: 15s}
+
+check = {
+    _check_id: "0b6d8b63f8c64000",
+    _check_name: "CPU Check Influx",
+    _type: "deadman",
+    tags: {cpu: "down"},
+}
+crit = (r) => r["dead"]
+messageFn = (r) => "Check: CPU is down"
+
+data
+    |> v1["fieldsAsCols"]()
+    |> monitor["deadman"](t: experimental["subDuration"](from: now(), d: 5m))
+    |> monitor["check"](data: check, messageFn: messageFn, crit: crit)
