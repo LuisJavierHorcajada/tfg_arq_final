@@ -1,16 +1,19 @@
 data =
     from(bucket: "metrics")
         |> range(start: -5m)
-        |> filter(fn: (r) => r["_measurement]
+        |> filter(fn: (r) => r["_measurement] == "cpu"
+        |> filter(fn: (r) => r["_field"] == "usage_system")
+        |> filter(fn: (r) => r["cpu"] == "cpu-total")
+        |> filter(fn: (r) => r["host"] == "influxdb")
     _check_id: "0b7f9cea6ef16000",
     _check_name: "CPU Check InfluxDB",
     _type: "threshold",
     tags: {},
 }
-crit = (r) => r["usage_user"] > 90.0
-warn = (r) => r["usage_user"] > 75.0
-info = (r) => r["usage_user"] < 0.1
-ok = (r) => r["usage_user"] < 75.0 and r["usage_user"] > 1.0
+crit = (r) => r["usage_system"] > 90.0
+warn = (r) => r["usage_system"] > 75.0
+info = (r) => r["usage_system"] < 0.1
+ok = (r) => r["usage_system"] < 75.0 and r["usage_system"] > 1.0
 messageFn = (r) => "Check: ${ r._check_name } is: ${ r._level }"
 
 data
