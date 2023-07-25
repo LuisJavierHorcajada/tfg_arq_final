@@ -8,6 +8,10 @@ Contiene la instalación y despliegue de las herramientas mediante el uso de Doc
 
 Contiene algunos de los dahsboards pertinentes a la monitorización realizados en este TFG.
 
+## Tasks y consultas
+
+Contiene muestras de todos los tipos de tasks realizados (tasks asociados a alertas), y contiene también muestras de las consultas realizadas.
+
 ## Configuración de Telegraf
 
 Contiene una configuración de telegraf que permite realizar una monitorización completa de un sistema informático.
