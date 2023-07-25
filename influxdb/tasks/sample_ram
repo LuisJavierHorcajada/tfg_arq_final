@@ -1,0 +1,29 @@
+data =
+from(bucket: "Windows")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "mem")
+  |> filter(fn: (r) => r["_field"] == "used_percent")
+  |> filter(fn: (r) => r["name"] == "C" or r["name"] == "D")
+  |> filter(fn: (r) => r["host"] == "AZLVICNTRWDEV01")
+_check_id: "0b7f9cea6ef160128",
+_check_name: "RAM Check AZLVICNTRWDEV01",
+_type: "threshold",
+tags: {},
+}
+
+crit = (r) => r["usage_user"] > 90.0
+warn = (r) => r["usage_user"] > 75.0
+info = (r) => r["usage_user"] < 0.1
+ok = (r) => r["usage_user"] < 75.0 and r["used_percent"] > 1.0
+messageFn = (r) => "Check: ${ r._check_name } is: ${ r._level }"
+
+data
+    |> v1["fieldsAsCols"]()
+    |> monitor["check"](
+        data: check,
+        messageFn: messageFn,
+        crit: crit,
+        warn: warn,
+        info: info,
+        ok: ok,
+    )
