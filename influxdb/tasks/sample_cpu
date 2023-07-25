@@ -1,0 +1,25 @@
+data =
+    from(bucket: "metrics")
+        |> range(start: -5m)
+        |> filter(fn: (r) => r["_measurement]
+    _check_id: "0b7f9cea6ef16000",
+    _check_name: "CPU Check InfluxDB",
+    _type: "threshold",
+    tags: {},
+}
+crit = (r) => r["usage_user"] > 90.0
+warn = (r) => r["usage_user"] > 75.0
+info = (r) => r["usage_user"] < 0.1
+ok = (r) => r["usage_user"] < 75.0 and r["usage_user"] > 1.0
+messageFn = (r) => "Check: ${ r._check_name } is: ${ r._level }"
+
+data
+    |> v1["fieldsAsCols"]()
+    |> monitor["check"](
+        data: check,
+        messageFn: messageFn,
+        crit: crit,
+        warn: warn,
+        info: info,
+        ok: ok,
+    )
