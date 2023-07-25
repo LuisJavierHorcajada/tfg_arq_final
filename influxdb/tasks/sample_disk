@@ -1,0 +1,28 @@
+data =
+    from(bucket: "grafana")
+        |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+        |> filter(fn: (r) => r["_measurement"] == "disk")
+        |> filter(fn: (r) => r["_field"] == "used_percent")
+        |> filter(fn: (r) => r["device"] == "sdb1")
+        |> filter(fn: (r) => r["host"] == "grafana")
+    _check_id: "0c7a9cba6ef7531",
+    _check_name: "Disk Averrage Grafana",
+    _type: "threshold",
+    tags: {},
+}
+crit = (r) => r["used_percent"] > 90.0
+warn = (r) => r["used_percent"] > 75.0
+info = (r) => r["used_percent"] < 0.1
+ok = (r) => r["used_percent"] < 75.0 and r["used_percent"] > 1.0
+messageFn = (r) => "Check: ${ r._check_name } is: ${ r._level }"
+
+data
+    |> v1["fieldsAsCols"]()
+    |> monitor["check"](
+        data: check,
+        messageFn: messageFn,
+        crit: crit,
+        warn: warn,
+        info: info,
+        ok: ok,
+    )
