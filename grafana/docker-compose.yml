@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  grafana:
+    image: grafana/grafana-oss:9.4.7
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - source: grafana
+        target: /var/lib/grafana
+        type: volume
+    restart: always
+volumes:
+  grafana:
+    external: true
