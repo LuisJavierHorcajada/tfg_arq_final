@@ -1,0 +1,6 @@
+from(bucket: "grafana")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "diskio")
+  |> filter(fn: (r) => r["_field"] == "write_bytes" or r["_field"] == "read_bytes")
+  |> filter(fn: (r) => r["name"] == "sdb1")
+  |> filter(fn: (r) => r["host"] == "grafana")
