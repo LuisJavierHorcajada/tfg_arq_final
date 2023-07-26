@@ -6,7 +6,7 @@ Contiene la instalación y despliegue de las herramientas mediante el uso de Doc
 
 ## Dashboards
 
-Contiene algunos de los dahsboards pertinentes a la monitorización realizados en este TFG.
+Contiene algunos de los dashboards pertinentes a la monitorización realizados en este TFG, en formato JSON.
 
 ## Tasks y consultas
 
